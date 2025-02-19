@@ -30,6 +30,8 @@ func UserRoutes(router *gin.Engine) {
 		// {
 
 		// }
+
+		//temporary disable of protected routes
 	}
 
 }

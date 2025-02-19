@@ -10,6 +10,8 @@ import (
 	"google.golang.org/api/iterator"
 )
 
+//----------------------------------create new bookmark-----------------------------------
+
 func AddBookmarkService(userID string, bookmark models.Bookmark) (*models.Bookmark, error) {
 	// Add timestamps and userID
 	now := time.Now()
@@ -31,6 +33,8 @@ func AddBookmarkService(userID string, bookmark models.Bookmark) (*models.Bookma
 	bookmark.ID = docRef.ID
 	return &bookmark, nil
 }
+
+//-----------------------------get bookmarks------------------------------------------
 
 func GetBookmarksByUserID(userID string) ([]models.Bookmark, error) {
 	bookmarks := []models.Bookmark{}

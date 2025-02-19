@@ -14,7 +14,7 @@ import (
 
 var ctx = context.Background()
 
-
+//-------------------------------register user---------------------------------------------
 
 func RegisterUser(email, password, name string) (*models.Users, error) {
 	//hash password
@@ -50,6 +50,8 @@ func RegisterUser(email, password, name string) (*models.Users, error) {
 	return &user, nil
 }
 
+//-------------------------------------------sign in with google---------------------------------------
+
 func HandleGoogleSignIn(idToken string) (*models.Users, string, error) {
 	//verify the Google Id token
 	token, err := configs.AuthClient.VerifyIDToken(ctx, idToken)
@@ -70,6 +72,8 @@ func HandleGoogleSignIn(idToken string) (*models.Users, string, error) {
 	}
 	return user, custmToken, nil
 }
+
+//---------------------------------------------get or create new user ---------------------------------------------
 
 func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
 	//check user exist or not
@@ -93,17 +97,16 @@ func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
 		DisplayName(token.Claims["name"].(string)).
 		PhotoURL(token.Claims["picture"].(string))
 
-
-	authUser ,err := configs.AuthClient.CreateUser(ctx, params)
+	authUser, err := configs.AuthClient.CreateUser(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("error creating new user: %v", err)
 	}
 
 	user := models.Users{
-		ID: authUser.UID,
-		Name: authUser.DisplayName,
-		Email: authUser.Email,
-		AuthType: "google",
+		ID:        authUser.UID,
+		Name:      authUser.DisplayName,
+		Email:     authUser.Email,
+		AuthType:  "google",
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
@@ -113,6 +116,8 @@ func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
 	}
 	return &user, nil
 }
+
+//-------------------------------------------------login user ------------------------------------------------------
 
 func LoginUser(email, password string) (string, error) {
 	//get user by email
@@ -142,6 +147,7 @@ func LoginUser(email, password string) (string, error) {
 	return token, nil
 }
 
+//---------------------------------------------------update user deatils -------------------------------
 
 func UpdateUserService(userID string, updates models.Users) (*models.Users, error) {
 	// Use map data to update db
@@ -187,6 +193,8 @@ func UpdateUserService(userID string, updates models.Users) (*models.Users, erro
 	}
 	return &updatedUser, nil
 }
+
+//------------------------------------------------get user by details-----------------------------------
 
 func GetUserDetailsByID(userID string) (*models.Users, error) {
 	//validate userID
