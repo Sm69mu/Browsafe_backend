@@ -2,7 +2,6 @@ package routes
 
 import (
 	"browsafe_backend/controllers"
-	"browsafe_backend/middlewares"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -21,15 +20,16 @@ func UserRoutes(router *gin.Engine) {
 		userGroup.POST("/register", controllers.RegisterUser)
 		userGroup.POST("/login", controllers.LoginUser)
 		userGroup.POST("/google", controllers.HandleGoogleSignIn)
+		userGroup.GET("/getuser/:id", controllers.GetuserDetails)
+		userGroup.PUT("/updateuser/:id", controllers.UpdateUser)
+		userGroup.POST("/bookmarks/:id", controllers.AddBookmark)
+		userGroup.GET("/bookmarks/:id", controllers.GetBookmarks)
 
-		protected := userGroup.Group("")
-		protected.Use(middlewares.AuthMiddleware())
-		{
-			protected.GET("/getuser/:id", controllers.GetuserDetails)
-			protected.PUT("/updateuser/:id", controllers.UpdateUser)
-			protected.POST("/bookmarks/:id", controllers.AddBookmark)
-			protected.GET("/bookmarks/:id", controllers.GetBookmarks)
-		}
+		// protected := userGroup.Group("")
+		// protected.Use(middlewares.AuthMiddleware())
+		// {
+
+		// }
 	}
 
 }
