@@ -22,8 +22,9 @@ func UserRoutes(router *gin.Engine) {
 		userGroup.POST("/google", controllers.HandleGoogleSignIn)
 		userGroup.GET("/getuser/:id", controllers.GetuserDetails)
 		userGroup.PUT("/updateuser/:id", controllers.UpdateUser)
-		userGroup.POST("/bookmarks/:id", controllers.AddBookmark)
-		userGroup.GET("/bookmarks/:id", controllers.GetBookmarks)
+
+		// userGroup.POST("/bookmarks/:id", controllers.AddBookmark)
+		// userGroup.GET("/bookmarks/:id", controllers.GetBookmarks)
 
 		// protected := userGroup.Group("")
 		// protected.Use(middlewares.AuthMiddleware())

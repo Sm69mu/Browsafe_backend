@@ -26,12 +26,22 @@ func RegisterUser(email, password, name string) (*models.Users, error) {
 	params := (&auth.UserToCreate{}).
 		Email(email).
 		Password(password).
-		DisplayName(name)
+		DisplayName(name).
+		EmailVerified(false)
 
 	authUser, err := configs.AuthClient.CreateUser(ctx, params)
 	if err != nil {
 		return nil, fmt.Errorf("error creating Firebase user %v", err)
 	}
+	//custom claims for metadata
+	// claims := map[string]interface{}{
+	// 	//"created_at": time.Now().Unix(),
+	// 	"last_login": time.Now().Unix(),
+	// }
+	// if err := configs.AuthClient.SetCustomUserClaims(ctx, authUser.UID, claims); err != nil {
+	// 	return nil, fmt.Errorf("error setting user claims: %v", err)
+	// }
+
 	//create user doc in firestore
 	user := models.Users{
 		ID:        authUser.UID,

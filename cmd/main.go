@@ -9,11 +9,14 @@ import (
 
 func init() {
 	configs.LoadEnvVariables()
+	configs.LoadAgoraConfigs()
 	configs.InitFirebase()
 }
 
 func main() {
 	r := gin.Default()
 	routes.UserRoutes(r)
+	routes.BookMarkRoutes(r)
+	routes.VideoCallRoutes(r)
 	r.Run(":" + configs.Port)
 }
