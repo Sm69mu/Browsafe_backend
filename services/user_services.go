@@ -14,8 +14,6 @@ import (
 
 var ctx = context.Background()
 
-//-------------------------------register user---------------------------------------------
-
 func RegisterUser(email, password, name string) (*models.Users, error) {
 	//hash password
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -52,7 +50,7 @@ func RegisterUser(email, password, name string) (*models.Users, error) {
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 	}
-	//save to firestore
+	//save firestore
 	_, err = configs.FirestoreClient.Collection("users").Doc(user.ID).Set(ctx, user)
 	if err != nil {
 		return nil, fmt.Errorf("error saving user to firestore: %v", err)
@@ -60,22 +58,20 @@ func RegisterUser(email, password, name string) (*models.Users, error) {
 	return &user, nil
 }
 
-//-------------------------------------------sign in with google---------------------------------------
-
 func HandleGoogleSignIn(idToken string) (*models.Users, string, error) {
-	//verify the Google Id token
+	//verify Google Id token
 	token, err := configs.AuthClient.VerifyIDToken(ctx, idToken)
 	if err != nil {
 		return nil, "", fmt.Errorf("error verifying Google ID token: %v", err)
 	}
 
-	//get or create user
+	//get/create user
 	user, err := getOrcreateGoogleUser(token)
 	if err != nil {
 		return nil, "", err
 	}
 
-	//create a custom token for client
+	//create custom token
 	custmToken, err := configs.AuthClient.CustomToken(ctx, user.ID)
 	if err != nil {
 		return nil, "", fmt.Errorf("error creating custom token %v", err)
@@ -83,10 +79,8 @@ func HandleGoogleSignIn(idToken string) (*models.Users, string, error) {
 	return user, custmToken, nil
 }
 
-//---------------------------------------------get or create new user ---------------------------------------------
-
 func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
-	//check user exist or not
+	//user exist or not
 	existingUser, err := configs.AuthClient.GetUser(ctx, token.UID)
 	if err == nil {
 		doc, err := configs.FirestoreClient.Collection("users").Doc(existingUser.UID).Get(ctx)
@@ -100,7 +94,7 @@ func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
 		return &userData, nil
 	}
 
-	//create new user if does not exist
+	//new user if does not exist
 	params := (&auth.UserToCreate{}).
 		UID(token.UID).
 		Email(token.Claims["email"].(string)).
@@ -126,8 +120,6 @@ func getOrcreateGoogleUser(token *auth.Token) (*models.Users, error) {
 	}
 	return &user, nil
 }
-
-//-------------------------------------------------login user ------------------------------------------------------
 
 func LoginUser(email, password string) (string, error) {
 	//get user by email
@@ -157,12 +149,8 @@ func LoginUser(email, password string) (string, error) {
 	return token, nil
 }
 
-//---------------------------------------------------update user deatils -------------------------------
-
 func UpdateUserService(userID string, updates models.Users) (*models.Users, error) {
-	// Use map data to update db
 	updateMap := make(map[string]interface{})
-	// Only update non-empty fields
 	if updates.Email != "" {
 		updateMap["Email"] = updates.Email
 	}
@@ -172,11 +160,9 @@ func UpdateUserService(userID string, updates models.Users) (*models.Users, erro
 	if updates.Name != "" {
 		updateMap["Name"] = updates.Name
 	}
-	// If no fields to update, return early
 	if len(updateMap) == 0 {
 		return nil, fmt.Errorf("no fields to update")
 	}
-	// Add timestamp
 	updateMap["UpdatedAt"] = time.Now()
 	// Get doc by id
 	docRef := configs.FirestoreClient.Collection("users").Doc(userID)
@@ -185,12 +171,11 @@ func UpdateUserService(userID string, updates models.Users) (*models.Users, erro
 	if err != nil {
 		return nil, fmt.Errorf("user not found: %v", err)
 	}
-	// Update with merge
 	_, err = docRef.Set(ctx, updateMap, firestore.MergeAll)
 	if err != nil {
 		return nil, fmt.Errorf("failed to update user: %v", err)
 	}
-	// Get updated doc
+	// Get  doc
 	doc, err := docRef.Get(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("failed to fetch updated user: %v", err)
@@ -204,10 +189,7 @@ func UpdateUserService(userID string, updates models.Users) (*models.Users, erro
 	return &updatedUser, nil
 }
 
-//------------------------------------------------get user by details-----------------------------------
-
 func GetUserDetailsByID(userID string) (*models.Users, error) {
-	//validate userID
 	if userID == "" {
 		return nil, fmt.Errorf("UserID is empty")
 	}

@@ -17,7 +17,7 @@ var (
 
 func InitFirebase() {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile("../firebase.json")
+	opt := option.WithCredentialsFile("firebase.json")
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
 		log.Fatalf("error init firebase: %v", err)

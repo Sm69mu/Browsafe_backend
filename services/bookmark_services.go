@@ -10,10 +10,7 @@ import (
 	"google.golang.org/api/iterator"
 )
 
-//----------------------------------create new bookmark-----------------------------------
-
 func AddBookmarkService(userID string, bookmark models.Bookmark) (*models.Bookmark, error) {
-	// Add timestamps and userID
 	now := time.Now()
 	bookmark.CreateAt = now
 	bookmark.UserID = userID
@@ -34,11 +31,9 @@ func AddBookmarkService(userID string, bookmark models.Bookmark) (*models.Bookma
 	return &bookmark, nil
 }
 
-//-----------------------------get bookmarks------------------------------------------
-
 func GetBookmarksByUserID(userID string) ([]models.Bookmark, error) {
 	bookmarks := []models.Bookmark{}
-	// Get user's bookmarks collection
+	// Get bookmarks collection
 	iter := configs.FirestoreClient.Collection("users").Doc(userID).Collection("bookmarks").OrderBy("CreateAt", firestore.Desc).Documents(ctx)
 	defer iter.Stop()
 	// Iterate through doc
@@ -54,7 +49,7 @@ func GetBookmarksByUserID(userID string) ([]models.Bookmark, error) {
 		if err := doc.DataTo(&bookmark); err != nil {
 			return nil, fmt.Errorf("failed to parse bookmark: %v", err)
 		}
-		//set bm Id as doc iD
+		//bm Id as doc iD
 		bookmark.ID = doc.Ref.ID
 		bookmarks = append(bookmarks, bookmark)
 	}

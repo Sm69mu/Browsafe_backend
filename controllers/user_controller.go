@@ -23,8 +23,6 @@ type GoogleSignIn struct {
 	IDToken string `json:"idtoken" binding:"required"`
 }
 
-//-----------------------------------register user controller --------------------------------------
-
 func RegisterUser(ctx *gin.Context) {
 	var req RegisterRequest
 	if err := ctx.ShouldBind(&req); err != nil {
@@ -37,7 +35,6 @@ func RegisterUser(ctx *gin.Context) {
 	user, err := services.RegisterUser(req.Email, req.Password, req.Name)
 	if err != nil {
 		statucode := http.StatusInternalServerError
-		//check for error types
 		if err.Error() == "error creating Firebase user: email already exists" {
 			statucode = http.StatusConflict
 		}
@@ -52,8 +49,6 @@ func RegisterUser(ctx *gin.Context) {
 		"data":    user,
 	})
 }
-
-//-----------------------------------Login user controller --------------------------------------
 
 func LoginUser(ctx *gin.Context) {
 	var req LoginRequest
@@ -82,8 +77,6 @@ func LoginUser(ctx *gin.Context) {
 		"data":    token,
 	})
 }
-
-//-----------------------------------sign in with google controller --------------------------------------
 
 func HandleGoogleSignIn(ctx *gin.Context) {
 	var req GoogleSignIn
@@ -116,8 +109,6 @@ func HandleGoogleSignIn(ctx *gin.Context) {
 	})
 }
 
-//-----------------------------------get authenticated user controller --------------------------------------
-
 func GetAuthUser(ctx *gin.Context) {
 	//the user ID should be set by the middleware
 	userID, exists := ctx.Get("userID")
@@ -142,8 +133,6 @@ func GetAuthUser(ctx *gin.Context) {
 	})
 }
 
-//-----------------------------------update user controller --------------------------------------
-
 func UpdateUser(ctx *gin.Context) {
 	userID := ctx.Param("id")
 	var updates models.Users
@@ -166,8 +155,6 @@ func UpdateUser(ctx *gin.Context) {
 	})
 
 }
-
-//-----------------------------------get user controller --------------------------------------
 
 func GetuserDetails(ctx *gin.Context) {
 	userID := ctx.Param("id")

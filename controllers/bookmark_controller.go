@@ -8,8 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//-----------------------------------add bookmark controller --------------------------------------
-
 func AddBookmark(ctx *gin.Context) {
 	userID := ctx.Param("id")
 	var bookmark models.Bookmark
@@ -37,8 +35,6 @@ func AddBookmark(ctx *gin.Context) {
 		"data":    createdBookmark,
 	})
 }
-
-//-----------------------------------get bookmarks controller --------------------------------------
 
 func GetBookmarks(ctx *gin.Context) {
 	userID := ctx.Param("id")

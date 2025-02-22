@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"log"
 	"os"
+
 	"github.com/joho/godotenv"
 )
 
 var Port string
 
 func LoadEnvVariables() {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load(".env")
 	Port = os.Getenv("PORT")
 	fmt.Print(Port)
-	if err!=nil{
+	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 }
