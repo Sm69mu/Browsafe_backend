@@ -18,5 +18,9 @@ func main() {
 	routes.UserRoutes(r)
 	routes.BookMarkRoutes(r)
 	routes.VideoCallRoutes(r)
-	r.Run(":" + configs.Port)
+	port := configs.Port
+	if port == "" {
+		port = "3000"
+	}
+	r.Run(":" + port)
 }
