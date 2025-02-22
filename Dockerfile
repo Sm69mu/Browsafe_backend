@@ -17,6 +17,6 @@ COPY . .
 EXPOSE 3000
 
 # Verify .env exists before running
-RUN ls -la .env
+# RUN ls -la .env
 
 CMD ["air", "-c", ".air.toml"]
