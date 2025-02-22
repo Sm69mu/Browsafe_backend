@@ -8,8 +8,8 @@ COPY go.mod go.sum ./
 RUN go mod tidy
 
 # Copy .env file first and set proper permissions
-COPY .env firebase.json ./
-RUN chmod 644 .env firebase.json
+# COPY .env firebase.json ./
+# RUN chmod 644 .env firebase.json
 
 # Then copy everything else
 COPY . .
