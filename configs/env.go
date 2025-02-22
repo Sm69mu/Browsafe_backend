@@ -11,7 +11,7 @@ import (
 var Port string
 
 func LoadEnvVariables() {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("../.env")
 	Port = os.Getenv("PORT")
 	fmt.Print(Port)
 	if err != nil {
