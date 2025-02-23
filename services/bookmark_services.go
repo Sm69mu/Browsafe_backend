@@ -14,7 +14,7 @@ func AddBookmarkService(userID string, bookmark models.Bookmark) (*models.Bookma
 	now := time.Now()
 	bookmark.CreateAt = now
 	bookmark.UserID = userID
-	// Get reference to user's bookmarks collection
+	// Get user's bookmarks collection
 	bookmarksRef := configs.FirestoreClient.Collection("users").Doc(userID).Collection("bookmarks")
 	// Add the bookmark
 	docRef, _, err := bookmarksRef.Add(ctx, map[string]interface{}{
